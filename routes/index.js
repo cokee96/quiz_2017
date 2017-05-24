@@ -5,7 +5,17 @@ var quizController = require('../controllers/quiz_controller');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index');
+    res.render('index');
+});
+
+/* GET ayuda page. */
+router.get('/help', function(req, res, next) {
+    res.render('help');
+});
+
+/* GET play page. */
+router.get('/random_play', function(req, res, next) {
+    res.render('random_play');
 });
 
 // Pagina de creditos
