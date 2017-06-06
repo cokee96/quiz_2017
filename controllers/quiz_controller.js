@@ -195,7 +195,7 @@ exports.randomplay = function (req, res, next) {
 
     var answer = req.query.answer || "";
 
-    req.session.score = req.query.answer || 0;
+    req.session.score = req.session.score || 0;
 
     models.Quiz.findAll()
         .then(function (array_quiz){
@@ -203,7 +203,7 @@ exports.randomplay = function (req, res, next) {
             var nquizzes = req.session.array_quiz.length;
             var bucle = true;
             while(bucle){
-                var random = Math.floor(Math.random()*(nquizzes-1));
+                var random = Math.floor(Math.random()*nquizzes);
                 if(req.session.array_quiz[random] !== 0){
                     var quiz = req.session.array_quiz[random];
                     req.session.array_quiz[random]=0;
@@ -238,9 +238,12 @@ exports.randomcheck = function (req, res, next) {
     else{
         var score = req.session.score;
         req.session.score = undefined;
+        req.session.array_quiz = undefined;
     }
     if (score === array_quizzes.length){
-        res.render('quizzes/random_more',{
+        req.session.score = undefined;
+        req.session.array_quiz = undefined;
+        res.render('quizzes/random_nomore',{
             score:score
         });
     }
@@ -249,7 +252,7 @@ exports.randomcheck = function (req, res, next) {
             quiz: req.quiz,
             result: result,
             answer: answer,
-            score: req.session.score
+            score: score
         });
     }
 };
