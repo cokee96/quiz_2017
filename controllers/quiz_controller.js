@@ -178,7 +178,7 @@ exports.randomplay = function (req, res, next) {
 
     var answer = req.query.answer || '';
 
-    res.render('quizzes/random_play', {
+    res.render('quizzes/randomplay', {
         quiz: req.quiz,
         answer: answer
     });
@@ -233,7 +233,7 @@ exports.randomcheck = function (req, res, next) {
     }
     else{
         var score = req.session.score;
-        req.session.array_quiz = undefined;
+        req.session.score = undefined;
     }
     if (score === array_quizzes.length){
         res.render('quizzes/randommore',{
