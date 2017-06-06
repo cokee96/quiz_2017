@@ -49,9 +49,8 @@ router.delete('/quizzes/:quizId(\\d+)',    quizController.destroy);
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 
-router.get('/quizzes/:quizId(\\d+)/random_play',  quizController.randomplay);
-router.get('/quizzes/:quizId(\\d+)/random_check', quizController.randomcheck);
-router.get('/quizzes/:quizId(\\d+)/random_nomore', quizController.randomnomore);
+router.get('/quizzes/randomplay',  quizController.randomplay);
+router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
 
 
 
