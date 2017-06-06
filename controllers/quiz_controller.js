@@ -173,17 +173,79 @@ exports.play = function (req, res, next) {
     });
 };
 
+// GET /quizzes/:quizId/randomplay
+exports.randomplay = function (req, res, next) {
+
+    var answer = req.query.answer || '';
+
+    res.render('quizzes/random_play', {
+        quiz: req.quiz,
+        answer: answer
+    });
+};
+
 
 // GET /quizzes/:quizId/check
 exports.check = function (req, res, next) {
 
     var answer = req.query.answer || "";
 
+    req.session.score = req.query.answer || 0;
+
+    models.Quiz.findAll()
+        .then(function (array_quiz){
+            req.session.array_quiz = req.session.array_quiz || array_quiz;
+            var nquizzes = req.session.array_quiz.length;
+            var quiz = undefined;
+            var bucle = true;
+            while(bucle){
+                var random = Math.floor(Math.random()*(nquizzes-1));
+                if(req.session.array_quiz[random] != 0){
+                    quiz = req.session.quizzes[random];
+                    req.session.array_quiz[random]=0;
+                    bucle=false;
+                }
+            }
+            res.render('quizzes/random_play',{
+                quiz: quiz,
+                answer: answer,
+                score: req.session.score
+            });
+        })
+        .catch(function(error){
+            next(error);
+        });
+};
+
+
+// GET /quizzes/:quizId/randomcheck
+exports.randomcheck = function (req, res, next) {
+
+    var answer = req.query.answer || "";
+
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
 
-    res.render('quizzes/result', {
-        quiz: req.quiz,
-        result: result,
-        answer: answer
-    });
+    var array_quizzes = req.session.array_quiz;
+
+    if (result) {
+        req.session.score++;
+        var score = req.session.score;
+    }
+    else{
+        var score = req.session.score;
+        req.session.array_quiz = undefined;
+    }
+    if (score === array_quizzes.length){
+        res.render('quizzes/randommore',{
+            score:score
+        });
+    }
+    else{
+        res.render('quizzes/randomresult', {
+            quiz: req.quiz,
+            result: result,
+            answer: answer,
+            score: req.session.score
+        });
+    }
 };

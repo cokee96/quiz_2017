@@ -15,8 +15,9 @@ router.get('/help', function(req, res, next) {
 
 /* GET play page. */
 router.get('/random_play', function(req, res, next) {
-    res.render('random_play');
+    res.render('/quizzes/random_play');
 });
+
 
 // Pagina de creditos
 router.get('/author', function(req, res, next) {
@@ -39,6 +40,11 @@ router.delete('/quizzes/:quizId(\\d+)',    quizController.destroy);
 
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
+
+router.get('/quizzes/:quizId(\\d+)/random_play',  quizController.randomplay);
+router.get('/quizzes/:quizId(\\d+)/random_check', quizController.randomcheck);
+router.get('/quizzes/:quizId(\\d+)/random_nomore', quizController.randomnomore);
+
 
 
 module.exports = router;
