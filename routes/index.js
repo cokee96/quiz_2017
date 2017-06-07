@@ -41,20 +41,37 @@ router.get(/(?!\/new$|\/edit$|\/play$|\/check$|\/session$|\/(\d+)$)\/[^\/]*$/, f
 router.get('/', function (req, res, next) {
     res.render('index');
 router.get('/', function(req, res, next) {
+    req.session.array_quiz = undefined;
+    req.session.score = undefined;
     res.render('index');
 
 });
 
 /* GET ayuda page. */
 router.get('/help', function(req, res, next) {
+    req.session.array_quiz = undefined;
+    req.session.score = undefined;
     res.render('help');
 
 });
 
-// Pagina de creditos
-router.get('/author', function (req, res, next) {
-    res.render('author');
+/* GET play page. */
+router.get('/random_play', function(req, res, next) {
+    req.session.array_quiz = undefined;
+    req.session.score = undefined;
+    res.render('/quizzes/random_play');
 });
+
+
+// Pagina de creditos
+
+    router.get('/author', function (req, res, next) {
+        router.get('/author', function(req, res, next) {
+            req.session.array_quiz = undefined;
+            req.session.score = undefined;
+            res.render('author');
+        });
+    }
 
 
 // Autoload de rutas que usen :quizId
@@ -140,6 +157,10 @@ router.put('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)/accept',
 router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
     sessionController.loginRequired,
     tipController.destroy);
+
+router.get('/quizzes/randomplay',  quizController.randomplay);
+router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
+
 
 
 module.exports = router;

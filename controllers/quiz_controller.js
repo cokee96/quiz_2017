@@ -209,6 +209,7 @@ exports.play = function (req, res, next) {
 };
 
 
+
 // GET /quizzes/:quizId/check
 exports.check = function (req, res, next) {
 
@@ -221,4 +222,72 @@ exports.check = function (req, res, next) {
         result: result,
         answer: answer
     });
+};
+
+
+// GET /quizzes/:quizId/randomplay
+exports.randomplay = function (req, res, next) {
+
+    var answer = req.query.answer || "";
+
+    req.session.score = req.session.score || 0;
+
+    models.Quiz.findAll()
+        .then(function (array_quiz){
+            req.session.array_quiz = req.session.array_quiz || array_quiz;
+            var nquizzes = req.session.array_quiz.length;
+            var bucle = true;
+            while(bucle){
+                var random = Math.floor(Math.random()*nquizzes);
+                if(req.session.array_quiz[random] !== 0){
+                    var quiz = req.session.array_quiz[random];
+                    req.session.array_quiz[random]=0;
+                    bucle=false;
+                }
+            }
+            res.render('quizzes/random_play',{
+                quiz: quiz,
+                answer: answer,
+                score: req.session.score
+            });
+        })
+        .catch(function(error){
+            next(error);
+        });
+};
+
+
+// GET /quizzes/:quizId/randomcheck
+exports.randomcheck = function (req, res, next) {
+
+    var answer = req.query.answer || "";
+
+    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+
+    var array_quizzes = req.session.array_quiz;
+
+    if (result) {
+        req.session.score++;
+        var score = req.session.score;
+    }
+    else{
+        var score = req.session.score;
+        req.session.score = undefined;
+        req.session.array_quiz = undefined;
+    }
+    if (score === array_quizzes.length){
+        req.session.score = undefined;
+        req.session.array_quiz = undefined;
+        res.render('quizzes/random_nomore',{
+            score:score
+        });
+    }
+    else{
+        res.render('quizzes/random_result', {
+            quiz: req.quiz,
+            result: result,
+            answer: answer,
+            score: score
+        });
+    }
 };
