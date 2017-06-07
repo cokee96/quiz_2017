@@ -37,8 +37,18 @@ router.get(/(?!\/new$|\/edit$|\/play$|\/check$|\/session$|\/(\d+)$)\/[^\/]*$/, f
 //-----------------------------------------------------------
 
 /* GET home page. */
+
 router.get('/', function (req, res, next) {
     res.render('index');
+router.get('/', function(req, res, next) {
+    res.render('index');
+
+});
+
+/* GET ayuda page. */
+router.get('/help', function(req, res, next) {
+    res.render('help');
+
 });
 
 // Pagina de creditos
