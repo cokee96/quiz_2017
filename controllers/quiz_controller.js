@@ -84,6 +84,7 @@ exports.index = function (req, res, next) {
         findOptions.limit = items_per_page;
         findOptions.include = [{model: models.User, as: 'Author'}];
 
+
         return models.Quiz.findAll(findOptions);
     })
     .then(function (quizzes) {
@@ -101,6 +102,8 @@ exports.index = function (req, res, next) {
 
 // GET /quizzes/:quizId
 exports.show = function (req, res, next) {
+
+    var tips = req.quiz.Tips;
 
     res.render('quizzes/show', {quiz: req.quiz});
 };
@@ -240,13 +243,13 @@ exports.randomplay = function (req, res, next) {
             while(bucle){
                 var random = Math.floor(Math.random()*nquizzes);
                 if(req.session.array_quiz[random] !== 0){
-                    var quiz = req.session.array_quiz[random];
+                    req.quiz = req.session.array_quiz[random];
                     req.session.array_quiz[random]=0;
                     bucle=false;
                 }
             }
             res.render('quizzes/random_play',{
-                quiz: quiz,
+                quiz: req.quiz,
                 answer: answer,
                 score: req.session.score
             });

@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router();
+var     router = express.Router();
 
 var quizController = require('../controllers/quiz_controller');
 var tipController = require('../controllers/tip_controller');
@@ -39,8 +39,6 @@ router.get(/(?!\/new$|\/edit$|\/play$|\/check$|\/session$|\/(\d+)$)\/[^\/]*$/, f
 /* GET home page. */
 
 router.get('/', function (req, res, next) {
-    res.render('index');
-router.get('/', function(req, res, next) {
     req.session.array_quiz = undefined;
     req.session.score = undefined;
     res.render('index');
@@ -64,14 +62,12 @@ router.get('/random_play', function(req, res, next) {
 
 
 // Pagina de creditos
+router.get('/author', function(req, res, next) {
+    req.session.array_quiz = undefined;
+    req.session.score = undefined;
+    res.render('author');
+});
 
-    router.get('/author', function (req, res, next) {
-        router.get('/author', function(req, res, next) {
-            req.session.array_quiz = undefined;
-            req.session.score = undefined;
-            res.render('author');
-        });
-    }
 
 
 // Autoload de rutas que usen :quizId
@@ -156,6 +152,7 @@ router.put('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)/accept',
     tipController.accept);
 router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
     sessionController.loginRequired,
+    tipController.adminOrQuizOrTipAuthorRequired,
     tipController.destroy);
 
 router.get('/quizzes/randomplay',  quizController.randomplay);
