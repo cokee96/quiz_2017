@@ -236,7 +236,7 @@ exports.randomcheck = function (req, res, next) {
         var score = req.session.score;
     }
     else{
-        var score = req.session.score;
+        var score = 0;
         req.session.score = undefined;
         req.session.array_quiz = undefined;
     }
